@@ -15,22 +15,27 @@ window.Webflow.push(() => {
         'select[fs-list-field="state"][data-master="true"]'
       );
       if (!masterDropdown) {
+        // eslint-disable-next-line no-console
         console.warn('Master dropdown not found!');
         return;
       }
 
       masterDropdown.addEventListener('change', () => {
-        const selectedValue = masterDropdown.value;
+        const selectedValue = (masterDropdown as HTMLSelectElement).value;
 
         const allDropdowns = document.querySelectorAll('select[fs-list-field="state"]');
         allDropdowns.forEach((dropdown) => {
           if (dropdown !== masterDropdown) {
-            dropdown.value = selectedValue;
+            (dropdown as HTMLSelectElement).value = selectedValue;
           }
         });
 
         // Now trigger filtering once on master dropdown change
-        window.filterByState(selectedValue);
+        if (typeof window.filterByState === 'function') {
+          window.filterByState(selectedValue);
+        } else {
+          console.error('filterByState is not defined or not a function.');
+        }
       });
     }
 

@@ -9,38 +9,23 @@ window.Webflow.push(() => {
     populateStateDropdown(); // Populate the dropdown with states
     initializeFinsweetAttributes(); // Initialize Finsweet Attributes
     initializeSimpleMap(); // Initialize SimpleMap functionality
-    // Sync function: updates all dropdowns except master visually when master changes
-    function syncDropdowns() {
-      const masterDropdown = document.querySelector(
-        'select[fs-list-field="state"][data-master="true"]'
-      );
-      if (!masterDropdown) {
-        // eslint-disable-next-line no-console
-        console.warn('Master dropdown not found!');
-        return;
-      }
+    const dropdowns = document.querySelectorAll('select[fs-list-field="state"]');
 
-      masterDropdown.addEventListener('change', () => {
-        const selectedValue = (masterDropdown as HTMLSelectElement).value;
+    dropdowns.forEach((dropdown) => {
+      dropdown.addEventListener('change', () => {
+        const selectedValue = (dropdown as HTMLSelectElement).value;
 
-        const allDropdowns = document.querySelectorAll('select[fs-list-field="state"]');
-        allDropdowns.forEach((dropdown) => {
-          if (dropdown !== masterDropdown) {
-            (dropdown as HTMLSelectElement).value = selectedValue;
+        // Update all other dropdowns except the one just changed
+        dropdowns.forEach((otherDropdown) => {
+          if (otherDropdown !== dropdown) {
+            (otherDropdown as HTMLSelectElement).value = selectedValue;
+
+            // Optionally trigger input/change event on updated dropdown to make sure filters update
+            otherDropdown.dispatchEvent(new Event('input', { bubbles: true }));
+            otherDropdown.dispatchEvent(new Event('change', { bubbles: true }));
           }
         });
-
-        // Now trigger filtering once on master dropdown change
-        if (typeof window.filterByState === 'function') {
-          window.filterByState(selectedValue);
-        } else {
-          console.error('filterByState is not defined or not a function.');
-        }
       });
-    }
-
-    window.addEventListener('load', () => {
-      syncDropdowns();
     });
   });
 });

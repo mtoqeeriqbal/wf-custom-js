@@ -1,28 +1,32 @@
 /**
  * Initializes Finsweet Attributes and defines the global filterByState function.
  */
+
+// Extend the Window interface to include FinsweetAttributes
+declare global {
+  interface Window {
+    FinsweetAttributes: [string, () => void][];
+  }
+}
 export const initializeFinsweetAttributes = () => {
   window.FinsweetAttributes.push([
     'list',
-    (listInstances) => {
+    () => {
       // Define the global function
-      window.filterByState = function (stateValue) {
-        const dropdown = document.querySelector('[fs-list-field="state"]');
+      window.filterByState = function (stateValue: string) {
+        const dropdown = document.querySelector('[fs-list-field="state"]') as HTMLInputElement;
 
         if (!dropdown) {
-          console.warn('Dropdown not found');
           return;
         }
 
         // Set value
-        dropdown.value = stateValue;
+        dropdown.value = stateValue; // Set the value for the dropdown
 
         // Trigger Finsweet filters
         dropdown.dispatchEvent(new Event('input', { bubbles: true }));
         dropdown.dispatchEvent(new Event('change', { bubbles: true }));
       };
-
-      console.log('✅ filterByState is now available');
     },
   ]);
 };

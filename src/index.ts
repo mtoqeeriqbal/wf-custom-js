@@ -9,22 +9,46 @@ window.Webflow.push(() => {
     populateStateDropdown(); // Populate the dropdown with states
     initializeFinsweetAttributes(); // Initialize Finsweet Attributes
     initializeSimpleMap(); // Initialize SimpleMap functionality
-    const dropdowns = document.querySelectorAll('select[fs-list-field="state"]');
+    // Flags to prevent infinite loops
+    let isSyncingInput = false;
+    let isSyncingSelect = false;
 
-    dropdowns.forEach((dropdown) => {
-      dropdown.addEventListener('change', () => {
-        const selectedValue = (dropdown as HTMLSelectElement).value;
+    const inputs = document.querySelectorAll<HTMLInputElement>('input[fs-list-field="*"]');
+    const selects = document.querySelectorAll<HTMLSelectElement>('select[fs-list-field="state"]');
 
-        // Update all other dropdowns except the one just changed
-        dropdowns.forEach((otherDropdown) => {
-          if (otherDropdown !== dropdown) {
-            (otherDropdown as HTMLSelectElement).value = selectedValue;
+    inputs.forEach((input) => {
+      input.addEventListener('input', () => {
+        if (isSyncingInput) return;
 
-            // Optionally trigger input/change event on updated dropdown to make sure filters update
-            otherDropdown.dispatchEvent(new Event('input', { bubbles: true }));
-            otherDropdown.dispatchEvent(new Event('change', { bubbles: true }));
+        isSyncingInput = true;
+        const val = input.value;
+
+        inputs.forEach((otherInput) => {
+          if (otherInput !== input) {
+            otherInput.value = val;
+            otherInput.dispatchEvent(new Event('input', { bubbles: true }));
+            otherInput.dispatchEvent(new Event('change', { bubbles: true }));
           }
         });
+        isSyncingInput = false;
+      });
+    });
+
+    selects.forEach((select) => {
+      select.addEventListener('change', () => {
+        if (isSyncingSelect) return;
+
+        isSyncingSelect = true;
+        const val = select.value;
+
+        selects.forEach((otherSelect) => {
+          if (otherSelect !== select) {
+            otherSelect.value = val;
+            otherSelect.dispatchEvent(new Event('input', { bubbles: true }));
+            otherSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+        isSyncingSelect = false;
       });
     });
   });

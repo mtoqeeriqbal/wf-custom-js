@@ -59,10 +59,9 @@ export const states = [
  */
 export const populateStateDropdown = () => {
   // Try multiple selectors to find the dropdown
-  const dropdown =
-    document.querySelector('select[data-name="State"]') ||
+  const dropdown = (document.querySelector('select[data-name="State"]') ||
     document.querySelector('select#state-dropdown') ||
-    document.querySelector('select.state-dropdown');
+    document.querySelector('select.state-dropdown')) as HTMLSelectElement;
 
   if (dropdown) {
     // Clear existing options except the first one (if it's a placeholder)
@@ -76,6 +75,7 @@ export const populateStateDropdown = () => {
       dropdown.add(option);
     });
   } else {
+    // eslint-disable-next-line no-console
     console.warn('State dropdown not found on page');
   }
 };

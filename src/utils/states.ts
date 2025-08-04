@@ -2,56 +2,56 @@
  * List of all US states.
  */
 export const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
+  { name: 'Alabama', abbreviation: 'AL' },
+  { name: 'Alaska', abbreviation: 'AK' },
+  { name: 'Arizona', abbreviation: 'AZ' },
+  { name: 'Arkansas', abbreviation: 'AR' },
+  { name: 'California', abbreviation: 'CA' },
+  { name: 'Colorado', abbreviation: 'CO' },
+  { name: 'Connecticut', abbreviation: 'CT' },
+  { name: 'Delaware', abbreviation: 'DE' },
+  { name: 'Florida', abbreviation: 'FL' },
+  { name: 'Georgia', abbreviation: 'GA' },
+  { name: 'Hawaii', abbreviation: 'HI' },
+  { name: 'Idaho', abbreviation: 'ID' },
+  { name: 'Illinois', abbreviation: 'IL' },
+  { name: 'Indiana', abbreviation: 'IN' },
+  { name: 'Iowa', abbreviation: 'IA' },
+  { name: 'Kansas', abbreviation: 'KS' },
+  { name: 'Kentucky', abbreviation: 'KY' },
+  { name: 'Louisiana', abbreviation: 'LA' },
+  { name: 'Maine', abbreviation: 'ME' },
+  { name: 'Maryland', abbreviation: 'MD' },
+  { name: 'Massachusetts', abbreviation: 'MA' },
+  { name: 'Michigan', abbreviation: 'MI' },
+  { name: 'Minnesota', abbreviation: 'MN' },
+  { name: 'Mississippi', abbreviation: 'MS' },
+  { name: 'Missouri', abbreviation: 'MO' },
+  { name: 'Montana', abbreviation: 'MT' },
+  { name: 'Nebraska', abbreviation: 'NE' },
+  { name: 'Nevada', abbreviation: 'NV' },
+  { name: 'New Hampshire', abbreviation: 'NH' },
+  { name: 'New Jersey', abbreviation: 'NJ' },
+  { name: 'New Mexico', abbreviation: 'NM' },
+  { name: 'New York', abbreviation: 'NY' },
+  { name: 'North Carolina', abbreviation: 'NC' },
+  { name: 'North Dakota', abbreviation: 'ND' },
+  { name: 'Ohio', abbreviation: 'OH' },
+  { name: 'Oklahoma', abbreviation: 'OK' },
+  { name: 'Oregon', abbreviation: 'OR' },
+  { name: 'Pennsylvania', abbreviation: 'PA' },
+  { name: 'Rhode Island', abbreviation: 'RI' },
+  { name: 'South Carolina', abbreviation: 'SC' },
+  { name: 'South Dakota', abbreviation: 'SD' },
+  { name: 'Tennessee', abbreviation: 'TN' },
+  { name: 'Texas', abbreviation: 'TX' },
+  { name: 'Utah', abbreviation: 'UT' },
+  { name: 'Vermont', abbreviation: 'VT' },
+  { name: 'Virginia', abbreviation: 'VA' },
+  { name: 'Washington', abbreviation: 'WA' },
+  { name: 'West Virginia', abbreviation: 'WV' },
+  { name: 'Wisconsin', abbreviation: 'WI' },
+  { name: 'Wyoming', abbreviation: 'WY' },
 ];
 
 /**
@@ -59,7 +59,7 @@ export const states = [
  */
 export const populateStateDropdown = () => {
   const dropdowns = document.querySelectorAll<HTMLSelectElement>(
-    'select[data-name="State"], select#state-dropdown, select.state-dropdown'
+    'select[data-name="State"], select#state-dropdown, select.state-dropdown, select[data="states"]'
   );
 
   if (dropdowns.length === 0) {
@@ -67,13 +67,14 @@ export const populateStateDropdown = () => {
   }
 
   dropdowns.forEach((dropdown) => {
-    // Remove all options except first one (usually placeholder)
+    // Remove all options except the first one (usually a placeholder)
     while (dropdown.options.length > 1) {
       dropdown.remove(1);
     }
 
     states.forEach((state) => {
-      const option = new Option(state, state);
+      // Create a new option with the state's abbreviation as the value and the full name as the text
+      const option = new Option(state.name, state.abbreviation);
       dropdown.add(option);
     });
   });

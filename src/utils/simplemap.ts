@@ -25,6 +25,7 @@ export const initializeSimpleMap = () => {
     if (window.filterByState) {
       window.filterByState(stateAbbreviation); // Call the global filter function
     } else {
+      // eslint-disable-next-line no-console
       console.warn('filterByState function is not defined');
     }
 

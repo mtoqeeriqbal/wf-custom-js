@@ -1,9 +1,10 @@
 /**
- * Extends the Window interface to include the filterByState property.
+ * Extends the Window interface to include the filterByState and resetStateFilter properties.
  */
 declare global {
   interface Window {
     filterByState?: (stateName: string) => void;
+    resetStateFilter?: () => void;
   }
 }
 
@@ -31,4 +32,27 @@ export const initializeSimpleMap = () => {
 
     return true;
   };
+
+  // Initialize back button functionality for simplymaps reset
+  initializeSimpleMapBackButton();
+};
+
+/**
+ * Initializes back button functionality to reset SimpleMaps filters.
+ * Looks for elements with data-simplemap-back attribute and adds click handlers.
+ */
+const initializeSimpleMapBackButton = () => {
+  // Look for back buttons with data-simplemap-back attribute
+  const backButtons = document.querySelectorAll('[data-simplemap-back]');
+
+  backButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (window.resetStateFilter) {
+        window.resetStateFilter();
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('resetStateFilter function is not defined');
+      }
+    });
+  });
 };

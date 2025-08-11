@@ -7,6 +7,7 @@ declare global {
   interface Window {
     FinsweetAttributes: [string, () => void][];
     filterByState?: (stateValue: string) => void;
+    resetStateFilter?: () => void;
   }
 }
 
@@ -31,6 +32,26 @@ export const initializeFinsweetAttributes = () => {
           dropdown.value = stateValue;
 
           // Trigger Finsweet filters
+          dropdown.dispatchEvent(new Event('input', { bubbles: true }));
+          dropdown.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      };
+
+      // Define the global reset function
+      window.resetStateFilter = function () {
+        const dropdowns = document.querySelectorAll(
+          '[fs-list-field="state"]'
+        ) as NodeListOf<HTMLSelectElement>;
+
+        if (!dropdowns || dropdowns.length === 0) {
+          return;
+        }
+
+        dropdowns.forEach((dropdown) => {
+          // Reset dropdown to show all states (first option or empty value)
+          dropdown.selectedIndex = 0;
+
+          // Trigger Finsweet filters to reset the list
           dropdown.dispatchEvent(new Event('input', { bubbles: true }));
           dropdown.dispatchEvent(new Event('change', { bubbles: true }));
         });
